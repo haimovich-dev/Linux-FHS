@@ -46,9 +46,51 @@ This directory is used aa a starting point for mounted removable devices like fl
 Mostly like the `/media` directory just for temporary filesystems used by administrators.
 
 ## `/opt`
-In this directory you install third-party software ot just some other software that is not related to the system, for example you decide to test another version of a software you already have, lets take OpenSSH for example, APT on Ubuntu 24.04.2 supports the version 9.9p1 which has some CVEs, so before upgrading manually to 10.0p2 I want to install it isolated and test if it works, so I will create `/opt/openssh-10-0-p2` and install it there.
+In this directory you install third-party software or just some other software that is not related to the system, for example you decide to test another version of a software you already have, lets take OpenSSH for example, APT on Ubuntu 24.04.2 supports the version 9.6p1 which has some CVEs, so before upgrading manually to 10.0p2 I want to install it isolated and test if it works, so I will create `/opt/openssh-10-0-p2` and install it there.
 
 I have encountered this problem in my previous project "SSH-Hardening" when I tried to install the dependent libraries I strugled on understanding the location of those libraries.
+
+## `/root`
+Just the home directory for the root user
+
+## `/run`
+In this directory programms store their information since the system has booted, and on the next boot these files are cleared. If a programm has more then one file for logs, it's required to create a sub-directory for its application under `/run`. and older version for this convention was `/var/run` it may still be used but cannot be used simultaneously with each other.
+Under this directory you can find the .pid files which describe the process ID since the system has started.
+
+## `/sbin`
+This directory is similar to the `/bin` but in `/sbin` only administrative binaries are stored, or binaries that are used only with root privileges, In this directory nos sub-directories should exist, and for some reason it is stated that `/sbin` was not made due to security reasons, only to organize the binaries.
+
+## `/srv`
+As of what I undestood the `/srv` directory stands for service and this directory contains data that is served by different services. For example a web server provides a services data that is stored under `/srv/web` for example images, html files, etc.
+
+## `/tmp`
+Stands for temporary, if any program uses temporary files, they should be stored under `/tmp` and not make any assumptions that any file exists in this directory.
+
+## `/usr`
+This one is a big section, the legacy reason for that directory existance is to provide a location for read only data for users, different binaries that are used by users were stored under `/usr/bin` the same with `/usr/lib` and `/usr/sbin`. back then `/usr` was not mounted in the booting process so there was a need in storing binaries in the `/bin` directory to troubleshoot the machine in a single user mode and keep it minimal.
+
+As the time passed, developers decided to migrate to `/usr` and mount it while boot with the help of 'initramfs' that allowed to load the `/usr` early while the booting process in a safe way, and avoid duplications because the same binary could reside under `/bin` and `/usr/bin`.
+
+In addition for everything said above, there is a standard that defines the need is the next sub-directories:
+- `/usr/bin` : most user commands are stored in this location
+- `/usr/lib` : system libraries
+- `/usr/local` : additional local FHS hierarchy
+- `/usr/sbin` : binaries used by the system that are not must have
+- `/usr/share` : files that are not dependant on the machines CPU architectures like PDF files for example.
+
+There are more sub-directories in `/usr` and most of them optional
+- `/usr/games` : just remove it
+- `/usr/include` : this one is a must have, contains headers for C programms.
+- `/usr/src` : stores the source code of any given software
+- `/usr/libexec` : something irrelevant
+- `/usr/lib[qual]` : you could also see it as a link under `/` and this directory contains libraries dependant on the architecture like 64 or 32.
+
+And finally the links like `/sbin > /usr/sbin` were left there to maintain legacy software and scripts that were using `/bin`/`/sbin`/`/lib` in their code.
+
+## `/var`
+
+
+
 
 # Bibliography
 The entire documentation was taken from [Linux Foundation](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html)
