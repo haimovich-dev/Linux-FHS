@@ -88,9 +88,32 @@ There are more sub-directories in `/usr` and most of them optional
 And finally the links like `/sbin > /usr/sbin` were left there to maintain legacy software and scripts that were using `/bin`/`/sbin`/`/lib` in their code.
 
 ## `/var`
+This is the last directory in the FHS, and this one was made to store variable data files which means files that are constantly changing while the system is running like log files, in legacy systems before systemd was introduced `/var` was a seperated partition and if there was no ability to make a seperate partition for `/var` then move it under `/usr/var`, but these when initramfs and systemd were introduced, booting the file system changed drastically and there is more need to seperate the `/var`.
 
+This directory must have sub-directories which are:
+- `/var/cache` : This one is pretty simple, just store applications cache data to reduce I/O operations or resource consumptions.
+- `/var/lib` : This sub-directory stores variable data used by different applications that must stay persistent between reboots, like the list of avaliable packages
+- `/var/lock` : As of what I understood this sub-directory contains files that represent files/devices/etc that are in use and can't be used by others simultaneously
+- `/var/log` : Simple as it sounds, this directory stores application/system logs, any other third party application should also store its logs in `/var/logs`
+- `/var/opt` : In this sub-directory should be stored the variable data of packages installed in `/opt` by creating `/var/opr/[ package-name ]`, if a package generates logs, they should be stored under the previously stated sub-directory.
+- `/var/run` : Outdated and not used any more, instead use `/run` both were defined for the same reason.
+- `/var/spool` : In this location you should store data that awaits a future processing.
+- `/var/tmp` : The same as `/tmp` but in `/var/tmp` the data is stored after reboots.
 
+There are also optional directories that depend on the system itself like `/var/account`
 
+## Additional conventions
+- If the kernel is located under `/` it should be called vmlinux/vmlinuz
+- The devices `/dev/null`/`/dev/zero`/`/dev/tty`
+- `/proc` : Is a very important one, contains kernel, memory, and process information of the system.
+- `/sys` : Depending on the kernel, contains infomration about drivers, devices, and kernel functions.
+- `/usr/include` : Contains all the header file for C programms
+- `/usr/src` : Used by kernel developers for C headers.
+- `/var/spool/cron` : Contians the variable data files used by at and cron.
+
+## Summary
+As you can see, the directories and sub-directories all of them have a certain reason to exists in the system, some are legacy and probably will become extinct, and some are used in modern systems. This project is very simple and was made for my self to document the understanding of the FHS and gain the ability to enhance my troubleshooting skills so I would be able to think about the location of possible files that cause the problem.
+Also another important thing, this is not the 100%, there are sub-directories that require a deeper dive into them to understand what files responsible for what missions, but for the beginning, bein able to understand what each tree stands for is a usefull skill the definitly will progress your understanding of the Linux world.
 
 # Bibliography
 The entire documentation was taken from [Linux Foundation](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html)
